@@ -1,15 +1,20 @@
 import { useEffect,useState } from "react";
 
-const catImages:string[]=[
-  "https://cdn2.thecatapi.com/images/bpc.jpg",
-  "https://cdn2.thecatapi.com/images/eac.jpg",
-  "https://cdn2.thecatapi.com/images/6qi.jpg",
-];
+interface CatCategory{
+  id:number;
+  name:string;
+}
 
-const randomCatImage = ()=>{
-  const index=Math.floor(Math.random()* catImages.length);
-  return catImages[index];
-};
+interface SearchCatImage{
+  breeds:string[];
+  categories:CatCategory[];
+  id:string;
+  url:string;
+  width:number;
+  height:number;
+}
+
+type SearchCatImageResponose=SearchCatImage[];
 
 const fetchCatImage = async() =>{
   const res =await fetch("https://api.thecatapi.com/v1/images/search");
@@ -24,14 +29,12 @@ fetchCatImage().then((image)=>{
 
 
 const IndexPage = () => {
-  const [catImageUrl, setCatImage]= useState<string | undefined>(undefined);
+  const [catImageUrl, setCatImageUrl]= useState("https://cdn2.thecatapi.com/images/bpc.jpg");
 
-  useEffect(()=>{
-    setCatImage(randomCatImage());
-  },[]);
 
-  const handleClick = () =>{
-    setCatImage(randomCatImage());
+  const handleClick = async() =>{
+    const image=await fetchCatImage();
+    setCatImageUrl(image.url);
   }
 
   return (
